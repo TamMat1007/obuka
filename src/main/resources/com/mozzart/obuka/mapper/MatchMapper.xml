@@ -1,0 +1,90 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.MatchMapper">
+
+	<resultMap id="MatchResultMap" type="com.mozzart.obuka.domain.Match">
+		<id column="ID" property="id" />
+		<result column="MATCH_DATE" property="matchDate" />
+
+		<result property="matchStatus" column="MATCH_STATUS" typeHandler="com.mozzart.obuka.typehandler.MatchStatusTypeHandler" />
+
+		<association property="competition"  columnPrefix="c_" resultMap="CompetitionResultMap" />
+		<collection property="participants" columnPrefix="p_" resultMap="ParticipantResultMap" />
+
+	</resultMap>
+
+
+	<resultMap id="ParticipantResultMap" type="com.mozzart.obuka.domain.Participant">
+		<id column="ID" property="id" />
+		<association property="translation" columnPrefix="tt_" resultMap="TranslationResultMap" />
+
+	</resultMap>
+
+	<resultMap id="CompetitionResultMap" type="com.mozzart.obuka.domain.Competition" >
+		<id column="ID" property="id" />
+		<association property="translation" columnPrefix="t_" resultMap="TranslationResultMap" />
+	</resultMap>
+	
+	<resultMap id="TranslationResultMap"  type="com.mozzart.obuka.domain.Translation">
+		<result column="ID" property="id" />
+		<!-- <collection property="translationItems" columnPrefix="ti_" resultMap="TranslationItemsResultMap" />  -->
+		<collection property="translationItems" javaType="ArrayList" ofType="com.mozzart.obuka.domain.TranslationItems" column="id" select="getTranslationItems"/>
+
+	</resultMap>
+	
+	<resultMap id="TranslationItemsResultMap"  type="com.mozzart.obuka.domain.TranslationItems">
+		<result column="TRANSLATION_ID" property="translationId" />
+		<result column="LANGUAGE_ID" property="languageId" />
+		<result column="VALUE" property="value" />
+	</resultMap>
+	
+	
+	<select id="getMatch" parameterType="Long"
+	resultMap="MatchResultMap">
+	SELECT
+    m.id,
+    m.match_date,
+    m.match_status,
+    c.id             AS c_id,
+    c.translation_id AS c_t_id,
+    p.id             AS p_id,
+    p.translation_id AS p_tt_id
+	FROM
+         match m
+    JOIN competition       c ON ( m.competition_id = c.id )
+    JOIN translation       t ON ( c.translation_id = t.id )
+    JOIN match_participant mp ON ( m.id = mp.match_id )
+    JOIN participant       p ON ( mp.participant_id = p.id )
+    JOIN translation       t ON ( p.translation_id = t.id )
+    WHERE m.ID=#{matchId}
+	</select>
+    
+    <select id="findAllMatches" parameterType="Long"
+	resultMap="MatchResultMap">
+	SELECT
+    m.id,
+    m.match_date,
+    m.match_status,
+    c.id             AS c_id,
+    c.translation_id AS c_t_translation_id,
+    p.id             AS p_id,
+    p.translation_id AS p_tt_translation_id
+	FROM
+         match m
+    JOIN competition       c ON ( m.competition_id = c.id )
+    JOIN translation       t ON ( c.translation_id = t.id )
+    JOIN match_participant mp ON ( m.id = mp.match_id )
+    JOIN participant       p ON ( mp.participant_id = p.id )
+    JOIN translation       t ON ( p.translation_id = t.id )
+	</select>
+	
+	 <select id="getTranslationItems" parameterType="int" resultType="com.mozzart.obuka.domain.TranslationItems">
+     select ti.translation_id,ti.language_id,ti.value from translation_items ti where ti.translation_id=#{id}
+	 </select>
+
+	<update id="updateMatch" parameterType="com.mozzart.obuka.domain.Match">
+       update match set MATCH_DATE= #{matchDate}, MATCH_STATUS = #{matchStatus}
+       where ID = #{id};
+   </update>
+   
+</mapper>

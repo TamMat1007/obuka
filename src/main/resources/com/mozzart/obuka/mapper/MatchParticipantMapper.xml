@@ -1,0 +1,19 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.MatchParticipantMapper">
+
+	<resultMap id="MatchParticipantResultMap"  type="com.mozzart.obuka.domain.MatchParticipant">
+		<id column="MATCH_ID" property="matchId" />
+		<result column="PARTICIPANT_ID" property="participantId" />
+		
+		<result property="participantType" column="TYPE" typeHandler="com.mozzart.obuka.typehandler.ParticipantTypeHandler" />
+
+	
+	</resultMap>
+
+	<insert id="insertMatchParticipant" parameterType="com.mozzart.obuka.domain.MatchParticipant">
+  		 insert into match_participant (MATCH_ID, PARTICIPANT_ID, TYPE) VALUES (#{matchId},#{participantId},#{participantType.id})   
+	</insert>
+
+
+</mapper>

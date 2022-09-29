@@ -1,0 +1,20 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.RulesMapper">
+
+	<resultMap id="RulesResultMap" type="com.mozzart.obuka.domain.Rules">
+		<id column="ID" property="id" />
+		<result column="MIN_ROWS" property="minRows" />
+		<result column="MIN_PAYMENT" property="minPayment" />
+		<result column="SYSTEM" property="system" />
+		<result column="MIN_WIN_ROWS" property="minWinRows" />
+		<result column="MAX_LOSE_ROWS" property="maxLoseRows" />
+		<result column="OUT_OF_TIME_BORDER" property="outOfTimeBorder" />
+
+		<!--<collection property="sums" columnPrefix="s_" resultMap="com.mozzart.obuka.mapper.SumMapper.SumResultMap" />
+		
+		<collection property="competitions" columnPrefix="c_" resultMap="com.mozzart.obuka.mapper.CompetitionMapper.CompetitionResultMap" />
+-->
+	</resultMap>
+
+</mapper>

@@ -1,0 +1,31 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.RulesCompetitionMapper">
+
+	<resultMap id="CompetitionResultMap" type="com.mozzart.obuka.domain.Competition">
+		<id column="ID" property="id" />
+		<association property="translation" columnPrefix="t_" resultMap="TranslationResultMap" />
+
+	</resultMap>
+	
+	<resultMap id="TranslationResultMap"  type="com.mozzart.obuka.domain.Translation">
+		<result column="ID" property="id" />
+		<collection property="translationItems" columnPrefix="ti_" resultMap="TranslationItemsResultMap" />
+
+	</resultMap>
+	
+	<resultMap id="TranslationItemsResultMap"  type="com.mozzart.obuka.domain.TranslationItems">
+		<result column="TRANSLATION_ID" property="translationId" />
+		<result column="LANGUAGE_ID" property="languageId" />
+		<result column="VALUE" property="value" />
+
+	</resultMap>
+	
+	<select id="findIncludedCompetitions" parameterType="long" resultMap="CompetitionResultMap">
+        select c.ID , c.TRANSLATION_ID , t.id as t_id, ti.language_id as t_ti_language_id,  ti.value as t_ti_value from
+        competition c join translation t on (c.translation_id=t.id) join translation_items ti on (t.id=ti.translation_id) join rules_competition g
+         on(c.id= g.competition_id) where g.rules_id=#{ruleId} and g.included=1
+      
+    </select>
+	
+</mapper>

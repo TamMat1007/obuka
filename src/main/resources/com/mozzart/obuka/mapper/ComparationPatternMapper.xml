@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mozzart.obuka.mapper.ComparationPatternMapper">
+
+	<resultMap id="ComparationPatternResultMap" type="com.mozzart.obuka.domain.ComparationPattern">
+		<id column="ID" property="id" />
+		<collection property="comparationPatternItems" columnPrefix="i_" resultMap="com.mozzart.obuka.mapper.ComparationPatternMapper.ComparationPatternItemsResultMap" />
+
+	</resultMap>
+	
+	    
+    <select id="getPattern" resultMap="ComparationPatternResultMap">
+        select c.id, ci.PRIORITY as i_priority, ci.COMPARATION_CRITERIA as i_comparation_criteria from comparation_pattern_items ci join comparation_pattern c 
+        on (ci.COMPARATION_PATTERN_ID=c.id) where c.id=#{id} order by ci.priority
+    </select>
+ 
+ <resultMap id="ComparationPatternItemsResultMap" type="com.mozzart.obuka.domain.ComparationPatternItems">
+		<id column="COMPARATION_PATTERN_ID" property="comparationPatternId" />
+		<result column="PRIORITY" property="priority" />
+
+		<result property="comparationCriteria" column="COMPARATION_CRITERIA" typeHandler="com.mozzart.obuka.typehandler.ComparationCriteriaTypeHandler" />
+	</resultMap>
+	
+</mapper>

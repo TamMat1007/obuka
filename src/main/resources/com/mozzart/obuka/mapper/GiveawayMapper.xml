@@ -1,0 +1,84 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.GiveawayMapper">
+
+	<resultMap id="GiveawayResultMap" type="com.mozzart.obuka.domain.Giveaway">
+		<id column="ID" property="id" />
+		<result column="START_DATE" property="startDate" />
+		<result column="END_DATE" property="endDate" />
+		<result column="TOTAL_STAGE_WINNERS" property="totalStageWinners" />
+		<result column="COMPARATION_PATTERN_ID" property="comparationPatternId" />
+
+		<association property="rules" columnPrefix="gr_" resultMap="RulesResultMap" />
+		<association property="translation" columnPrefix="t_" resultMap="TranslationResultMap" />
+		<collection property="giveawayStages" columnPrefix="s_" resultMap="com.mozzart.obuka.mapper.GiveawayStageMapper.GiveawayStageResultMap" />
+
+	</resultMap>
+	
+	<resultMap id="TranslationResultMap"  type="com.mozzart.obuka.domain.Translation">
+		<result column="ID" property="id" />
+		<collection property="translationItems" columnPrefix="ti_" resultMap="TranslationItemsResultMap" />
+
+	</resultMap>
+	
+	<resultMap id="TranslationItemsResultMap"  type="com.mozzart.obuka.domain.TranslationItems">
+		<result column="TRANSLATION_ID" property="translationId" />
+		<result column="LANGUAGE_ID" property="languageId" />
+		<result column="VALUE" property="value" />
+
+	</resultMap>
+
+	<select id="getById" parameterType="long" resultMap="GiveawayResultMap">
+        select g.id, g.translation_id, g.start_date, g.end_date, g.total_stage_winners,g.comparation_pattern_id, t.id as t_id,ti.translation_id as t_ti_translation_id,
+        ti.language_id as t_ti_language_id, ti.value as t_ti_value, gr.id as gr_id, gr.min_rows as gr_min_rows, gr.min_payment as gr_min_payment, 
+        gr.system as gr_system, gr.min_win_rows as gr_min_win_rows, gr.max_lose_rows as gr_max_lose_rows, gr.out_of_time_border as gr_out_of_time_border, 
+        s.id as s_id from giveaway g left join giveaway_stage s on (g.id=s.GIVEAWAY_ID) join rules gr on (g.rules_id=gr.id) join translation t on 
+        (g.translation_id=t.id) join translation_items ti on (t.id=ti.translation_id)
+        where g.id=#{id}
+    </select>
+
+	<select id="findActiveGiveaways" parameterType="java.util.Date" resultMap="GiveawayResultMap">
+        select g.id, g.translation_id, g.start_date, g.end_date, g.total_stage_winners,g.comparation_pattern_id, t.id as t_id,ti.translation_id as t_ti_translation_id,
+        ti.language_id as t_ti_language_id, ti.value as t_ti_value, gr.id as gr_id, gr.min_rows as gr_min_rows, gr.min_payment as gr_min_payment, 
+        gr.system as gr_system, gr.min_win_rows as gr_min_win_rows, gr.max_lose_rows as gr_max_lose_rows, gr.out_of_time_border as gr_out_of_time_border, 
+        s.id as s_id from giveaway g left join giveaway_stage s on (g.id=s.GIVEAWAY_ID) join rules gr on (g.rules_id=gr.id) join translation t on 
+        (g.translation_id=t.id) join translation_items ti on (t.id=ti.translation_id) WHERE #{sysDate} BETWEEN g.START_DATE AND g.END_DATE
+    </select>
+    
+    <select id="findAllGiveaways" resultMap="GiveawayResultMap">
+        select g.id, g.translation_id, g.start_date, g.end_date, g.total_stage_winners,g.comparation_pattern_id, t.id as t_id,ti.translation_id as t_ti_translation_id,
+        ti.language_id as t_ti_language_id, ti.value as t_ti_value, gr.id as gr_id, gr.min_rows as gr_min_rows, gr.min_payment as gr_min_payment, 
+        gr.system as gr_system, gr.min_win_rows as gr_min_win_rows, gr.max_lose_rows as gr_max_lose_rows, gr.out_of_time_border as gr_out_of_time_border, 
+        s.id as s_id from giveaway g left join giveaway_stage s on (g.id=s.GIVEAWAY_ID) join rules gr on (g.rules_id=gr.id) join translation t on 
+        (g.translation_id=t.id) join translation_items ti on (t.id=ti.translation_id)
+    </select>
+
+
+	<resultMap id="RulesResultMap" type="com.mozzart.obuka.domain.Rules">
+		<id column="ID" property="id" />
+		<result column="MIN_ROWS" property="minRows" />
+		<result column="MIN_PAYMENT" property="minPayment" />
+		<result column="SYSTEM" property="system" />
+		<result column="MIN_WIN_ROWS" property="minWinRows" />
+		<result column="MAX_LOSE_ROWS" property="maxLoseRows" />
+		<result column="OUT_OF_TIME_BORDER" property="outOfTimeBorder" />
+
+		<collection property="sums" columnPrefix="s_" resultMap="SumResultMap" />
+
+		<collection property="competitions" columnPrefix="c_" resultMap="CompetitionResultMap" />
+
+	</resultMap>
+
+	<resultMap id="SumResultMap" type="com.mozzart.obuka.domain.Sum">
+		<id column="ID" property="id" />
+		<result column="NAME" property="name" />
+
+	</resultMap>
+
+	<resultMap id="CompetitionResultMap" type="com.mozzart.obuka.domain.Competition">
+		<id column="ID" property="id" />
+		<result column="TRANSLATION_ID" property="translationId" />
+
+	</resultMap>
+
+</mapper>

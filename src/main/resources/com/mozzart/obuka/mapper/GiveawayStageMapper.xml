@@ -1,0 +1,22 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.GiveawayStageMapper">
+
+	<resultMap id="GiveawayStageResultMap" type="com.mozzart.obuka.domain.GiveawayStage">
+		<id column="ID" property="id" />
+		<result column="GIVEAWAY_ID" property="giveawayId" />
+
+		<result column="START_DATE" property="startDate" />
+		<result column="END_DATE" property="endDate" />
+		<result column="TOTAL_WINNERS" property="totalWinners" />
+
+	</resultMap>
+
+
+	<select id="findActiveGiveawayStage" resultMap="GiveawayStageResultMap">
+        select s.ID, s.GIVEAWAY_ID, s.START_DATE, s.END_DATE, s.TOTAL_WINNERS from giveaway_stage s 
+          WHERE s.GIVEAWAY_ID=#{giveawayId} AND #{sysDate} BETWEEN s.START_DATE AND s.END_DATE
+    </select>
+    
+
+</mapper>

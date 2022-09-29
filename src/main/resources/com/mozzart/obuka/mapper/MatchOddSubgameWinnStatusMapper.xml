@@ -1,0 +1,19 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.MatchOddSubgameWinnStatusMapper">
+
+	<resultMap id="MatchOddSubgameWinnStatusResultMap" type="com.mozzart.obuka.domain.MatchOddSubgameWinnStatus">
+		<id column="MATCH_ID" property="matchId" />
+		<id column="GAME_ID" property="gameId" />
+		<id column="SUBGAME_ID" property="subgameId" />
+
+		<result property="status" column="WINN_STATUS" typeHandler="com.mozzart.obuka.typehandler.WinnStatusTypeHandler" />
+
+	</resultMap>
+	
+	 <select id="getStatus" resultMap="MatchOddSubgameWinnStatusResultMap">
+        select s.MATCH_ID, s.GAME_ID, s.SUBGAME_ID, s.WINN_STATUS from MATCH_ODD_SUBGAME_WINN_STATUS s where s.MATCH_ID=#{matchId} and s.GAME_ID=#{gameId} and s.SUBGAME_ID=#{subgameId}
+    </select>
+
+
+</mapper>

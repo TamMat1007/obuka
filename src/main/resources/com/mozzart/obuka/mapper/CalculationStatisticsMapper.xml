@@ -1,0 +1,20 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.CalculationStatisticsMapper">
+
+	<resultMap id="CalculationStatisticsMap" type="com.mozzart.obuka.domain.CalculationStatistics">
+		<id column="ID" property="id" />
+		<result column="PROCESSING_TIME" property="processingTime" />
+
+	</resultMap>
+
+
+	<select id="getLastProcessingTime" resultMap="CalculationStatisticsMap">
+        SELECT ID,PROCESSING_TIME FROM CALCULATION_STATISTICS WHERE id IN (SELECT id FROM CALCULATION_STATISTICS WHERE PROCESSING_TIME = (SELECT MAX(PROCESSING_TIME) FROM CALCULATION_STATISTICS)) ORDER BY id DESC
+    </select>
+
+	<insert id="addLastProcessingTime" parameterType="com.mozzart.obuka.domain.CalculationStatistics">
+  		 insert into CALCULATION_STATISTICS (ID,PROCESSING_TIME) VALUES (#{id}, #{processingTime})   
+	</insert>
+
+</mapper>

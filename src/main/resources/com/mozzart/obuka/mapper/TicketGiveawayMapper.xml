@@ -1,0 +1,16 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.TicketGiveawayMapper">
+
+	<resultMap id="TicketGiveawayResultMap" type="com.mozzart.obuka.domain.TicketGiveaway">
+		<id column="TICKET_ID" property="ticketId" />
+		<result column="GIVEAWAY_ID" property="giveawayId" />
+
+	</resultMap>
+    
+    <insert id="insertTicketGiveaway" parameterType="com.mozzart.obuka.domain.TicketGiveaway">
+  		 insert into ticket_giveaway (TICKET_ID,GIVEAWAY_ID) VALUES (#{ticketId}, #{giveawayId})   
+	</insert>
+
+
+</mapper>

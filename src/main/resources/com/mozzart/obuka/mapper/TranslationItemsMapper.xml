@@ -1,0 +1,12 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.TranslationItemsMapper">
+
+	<resultMap id="TranslationItemsResultMap"  type="com.mozzart.obuka.domain.TranslationItems">
+		<result column="TRANSLATION_ID" property="translationId" />
+		<result column="LANGUAGE_ID" property="languageId" />
+		<result column="VALUE" property="value" />
+
+	</resultMap>
+
+</mapper>

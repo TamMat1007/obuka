@@ -1,0 +1,61 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.TicketMapper">
+
+	<resultMap id="TicketResultMap" type="com.mozzart.obuka.domain.Ticket">
+		<id column="ID" property="id" />
+		<result column="PAYMENT" property="payment" />
+		<result column="PAYMENT_DATE" property="paymentDate" />
+		<result column="SUM_ID" property="sumId" />
+
+		<result property="origin" column="ORIGIN" typeHandler="com.mozzart.obuka.typehandler.OriginTypeHandler" />
+
+		<result column="POTENTIAL_PAYOUT" property="potentialPayout" />
+
+		<result column="WIN_ODDS" property="winOdds" />
+		<result column="PLAYER_ID" property="playerId" />
+		<result column="SYSTEM" property="system" />
+		<result column="TIME_CHANGED" property="timeChanged" />
+
+		<collection property="ticketRows" columnPrefix="tr_" resultMap="com.mozzart.obuka.mapper.TicketRowMapper.TicketRowResultMap" />
+
+
+	</resultMap>
+
+	<select id="getTicket" parameterType="Long" resultMap="TicketResultMap">
+        select t.ID, t.PAYMENT, t.PAYMENT_DATE, t.SUM_ID, t.ORIGIN, t.POTENTIAL_PAYOUT, t.WIN_ODDS, t.SYSTEM, t.TIME_CHANGED, t.PLAYER_ID, tr.ID as tr_id, 
+        tr.TICKET_ID as tr_ticket_id, tr.MATCH_ID as tr_match_id, tr.GAME_ID as tr_game_id, tr.SUBGAME_ID as tr_subgame_id, tr.ODD_VALUE as tr_odd_value,
+        ws.WINN_STATUS as tr_winn_status from ticket t JOIN ticket_row tr on(t.ID=tr.TICKET_ID) join MATCH_ODD_SUBGAME_WINN_STATUS ws on 
+        (tr.MATCH_ID=ws.MATCH_ID AND tr.GAME_ID=ws.GAME_ID AND tr.SUBGAME_ID=ws.SUBGAME_ID) where t.ID=#{ticketId}
+    </select>
+
+	<select id="findAllTickets" resultMap="TicketResultMap">
+        select t.ID, t.PAYMENT, t.PAYMENT_DATE, t.SUM_ID, t.ORIGIN, t.POTENTIAL_PAYOUT, t.WIN_ODDS, t.SYSTEM, t.TIME_CHANGED, t.PLAYER_ID, tr.ID as tr_id, 
+        tr.TICKET_ID as tr_ticket_id, tr.MATCH_ID as tr_match_id, tr.GAME_ID as tr_game_id, tr.SUBGAME_ID as tr_subgame_id, tr.ODD_VALUE as tr_odd_value, 
+        ws.WINN_STATUS as tr_winn_status from ticket t JOIN ticket_row tr on(t.ID=tr.TICKET_ID) join MATCH_ODD_SUBGAME_WINN_STATUS ws on 
+        (tr.MATCH_ID=ws.MATCH_ID AND tr.GAME_ID=ws.GAME_ID AND tr.SUBGAME_ID=ws.SUBGAME_ID)
+    </select>
+
+	<select id="findUnprocessedTickets" resultMap="TicketResultMap">
+        select t.ID, t.PAYMENT, t.PAYMENT_DATE, t.SUM_ID, t.ORIGIN, t.POTENTIAL_PAYOUT, t.WIN_ODDS, t.SYSTEM, t.TIME_CHANGED, t.PLAYER_ID, tr.ID as tr_id, 
+        tr.TICKET_ID as tr_ticket_id, tr.MATCH_ID as tr_match_id, tr.GAME_ID as tr_game_id, tr.SUBGAME_ID as tr_subgame_id, tr.ODD_VALUE as tr_odd_value,
+        ws.WINN_STATUS as tr_winn_status from ticket t JOIN ticket_row tr on(t.ID=tr.TICKET_ID) JOIN ticket_giveaway tg on(t.ID=tg.TICKET_ID) left join
+         MATCH_ODD_SUBGAME_WINN_STATUS ws on (tr.MATCH_ID=ws.MATCH_ID AND tr.GAME_ID=ws.GAME_ID AND tr.SUBGAME_ID=ws.SUBGAME_ID) WHERE tg.GIVEAWAY_ID= #{giveawayId}
+         AND t.TIME_CHANGED BETWEEN #{lastEdit} AND #{sysDate}
+    </select>
+
+	<insert id="insertTicket" parameterType="com.mozzart.obuka.domain.Ticket">
+  		 insert into ticket (ID,PAYMENT,PAYMENT_DATE,SUM_ID,ORIGIN,POTENTIAL_PAYOUT,WIN_ODDS,PLAYER_ID, SYSTEM, TIME_CHANGED) VALUES (#{id}, #{payment}, 
+  		 #{paymentDate, jdbcType=TIMESTAMP}, #{sumId}, #{origin.id}, #{potentialPayout}, #{winOdds}, #{playerId},#{system},#{timeChanged})   
+	</insert>
+
+	<update id="updateTicket" parameterType="com.mozzart.obuka.domain.Ticket">
+       update ticket t set t.TIME_CHANGED = #{timeChanged}
+       where t.ID = #{id}
+   </update>
+
+	<update id="processTicket">
+      	update ticket t SET t.TIME_CHANGED=#{sysDate} WHERE t.ID=#{id}
+   </update>
+
+</mapper>

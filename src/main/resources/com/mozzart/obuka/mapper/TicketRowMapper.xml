@@ -1,0 +1,29 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.TicketRowMapper">
+
+	<resultMap id="TicketRowResultMap" type="com.mozzart.obuka.domain.TicketRow">
+	
+		<id column="ID" property="id" />
+		<id column="TICKET_ID" property="ticketId" />	
+		<result column="MATCH_ID" property="matchId" />
+		<result column="GAME_ID" property="gameId" />
+		<result column="SUBGAME_ID" property="subgameId" />
+		<result column="ODD_VALUE" property="oddValue" />
+		<result column="WINN_STATUS" property="winnStatus" typeHandler="com.mozzart.obuka.typehandler.WinnStatusTypeHandler" />
+
+	</resultMap>
+
+	<select id="findAllTicketRows" resultMap="TicketRowResultMap">
+        select tr.ID, tr.TICKET_ID, tr.MATCH_ID, tr.GAME_ID, tr.SUBGAME_ID, tr.ODD_VALUE, ws.WINN_STATUS from ticket_row tr join
+         MATCH_ODD_SUBGAME_WINN_STATUS ws on (tr.MATCH_ID=ws.MATCH_ID AND tr.GAME_ID=ws.GAME_ID AND tr.SUBGAME_ID=ws.SUBGAME_ID)
+    </select>
+
+	 <insert id="insertTicketRow" parameterType="com.mozzart.obuka.domain.TicketRow">
+  		 insert into ticket_row (ID,TICKET_ID,MATCH_ID,GAME_ID,SUBGAME_ID,ODD_VALUE) VALUES (#{id}, #{ticketId}, #{matchId},
+  		  #{gameId}, #{subgameId}, #{oddValue})   
+	</insert>
+
+
+
+</mapper>

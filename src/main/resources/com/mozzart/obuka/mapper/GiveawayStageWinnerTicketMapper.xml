@@ -1,0 +1,46 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mozzart.obuka.mapper.GiveawayStageWinnerTicketMapper">
+
+	<resultMap id="GiveawayStageWinnerTicketResultMap" type="com.mozzart.obuka.domain.GiveawayStageWinnerTicket">
+		<id column="GIVEAWAY_ID" property="giveawayId" />
+		<id column="GIVEAWAY_STAGE_ID" property="giveawayStageId" />
+		<id column="TICKET_ID" property="ticketId" />
+		<result column="RANK" property="rank" />
+		<result column="COMPARATION_PATTERN_ID" property="comparationPatternId" />
+	</resultMap>
+
+
+	<select id="getById" resultMap="com.mozzart.obuka.mapper.TicketMapper.TicketResultMap">
+		select l.ticket_id,t.id, t.payment, t.payment_date, t.sum_id, t.origin, t.potential_payout, t.win_odds, t.player_id, t.time_changed,
+		t.system, tr.id as tr_id from leaderboard l join ticket t on(l.ticket_id=t.id) join ticket_row tr on (t.id=tr.ticket_id)
+		where t.id=#{giveawayStageId} 
+    </select>
+	
+
+	<select id="getGiveawayStageWinners" resultMap="com.mozzart.obuka.mapper.TicketMapper.TicketResultMap">
+		select l.ticket_id,t.id, t.payment, t.payment_date, t.sum_id, t.origin, t.potential_payout, t.win_odds, t.player_id, t.time_changed,
+		t.system, tr.id as tr_id from giveaway_stage_winner_ticket l join ticket t on(l.ticket_id=t.id) join ticket_row tr on (t.id=tr.ticket_id)
+		where l.giveaway_id=#{giveawayId} and l.giveaway_stage_id=#{giveawayStageId} 
+    </select>
+
+	<insert id="insertNewLeaderboard" parameterType="java.util.List">
+		INSERT ALL
+		<foreach collection="list" item="l" index="index">
+            INTO giveaway_stage_winner_ticket (
+     	   	GIVEAWAY_ID,
+        	GIVEAWAY_STAGE_ID,
+        	TICKET_ID,
+        	RANK,
+        	COMPARATION_PATTERN_ID)
+        	VALUES(#{l.giveawayId}, #{l.giveawayStageId}, #{l.ticketId}, #{l.rank}, #{l.comparationPatternId})
+       </foreach>
+		SELECT * FROM dual
+	</insert>
+	
+	<delete id = "deleteLeaderboard" parameterType = "com.mozzart.obuka.domain.GiveawayStage">
+      DELETE from giveaway_stage_winner_ticket WHERE giveaway_id= #{giveawayId} and 
+      giveaway_stage_id= #{id}
+   </delete>
+
+</mapper>
