@@ -1,5 +1,5 @@
-# Mikroservis za organizovanje nagradnih igara
-> Predstavlja servis koji služi za organizovanje nagradnih igara, odnosno pronalaženje dobitnog tiketa po nekom od kriterijuma - duzini tiketa, visini ukupne kvote na tiketu, datumu uplate tiketa, pri određenim uslovima specifičnim za svaku nagradnu igru: broj redova, minimalna uplata na tiketu, uplatna mesta koja učestvuju, takmičenja koja su uključena u nagradnu igru...
+# Mikroservis za organizovanje MOZZART nagradnih igara
+> Predstavlja servis koji služi za organizovanje nagradnih igara, odnosno pronalaženje definisanog broja dobitnih tiketa po nekom od kriterijuma - dužini tiketa, visini ukupne kvote na tiketu, datumu uplate tiketa, pri čemu oni moraju ispunjavati određene uslove specifične za svaku nagradnu igru: broj redova, minimalna uplata na tiketu, uplatna mesta koja učestvuju, takmičenja koja su uključena u nagradnu igru...
 
 
 ## Tehnologije i alati
@@ -15,13 +15,14 @@ docker pull docker.mozzartio.com:5000/oracle-uos-db
  
  docker run --name test_container -p 1522:1521 -p 8080:8080 -e ORACLE_PWD=sys --shm-size="2g" -e DB_USERS="obuka1 obuka2" -d 07890775f278
 ```
-ActiveMQ - podaci(tiketi) se dobijaju sa spoljnih servisa a zatim odgovarajući JMS listeneri te podatke obrađuju dalje:
-Queue: obuka_queue
-Podešavanja za ActiveMQ:
 
-spring.activemq.broker-url=tcp://localhost:61616
-spring.activemq.user=admin
-spring.activemq.password=admin
+ActiveMQ - podaci(tiketi) se dobijaju sa spoljnih servisa a zatim odgovarajući JMS listeneri te podatke obrađuju dalje:  
+Queue: obuka_queue  
+Podešavanja za ActiveMQ:  
+
+spring.activemq.broker-url=tcp://localhost:61616  
+spring.activemq.user=admin  
+spring.activemq.password=admin  
 
 
 ## Funkcionalnosti
@@ -41,7 +42,7 @@ U njemu postoje dve celine:
 ## Model podataka
 Ovde se nalazi [sql fajl] sa eksportovanom Oracle bazom podataka. Model podataka je prikazan na slici ispod:
 
-![Relacioni model](./img/relacioni.png)
+![Relacioni model](../img/relacioni.png)
 
 
 
