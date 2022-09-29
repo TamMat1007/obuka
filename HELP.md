@@ -42,7 +42,7 @@ U njemu postoje dve celine:
 Ovde se nalazi [sql fajl] sa eksportovanom Oracle bazom podataka. Model podataka je prikazan na slici ispod:
 
 ![Relacioni model](./img/relacioni.png)
-
+<img src="/img/relacioni.jpg" alt="Alt text" title="Optional title">
 
 
 
