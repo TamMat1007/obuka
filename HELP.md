@@ -42,7 +42,7 @@ U njemu postoje dve celine:
 ## Model podataka
 Ovde se nalazi [sql fajl] sa eksportovanom Oracle bazom podataka. Model podataka je prikazan na slici ispod:
 
-![Relacioni model](obuka_git/src/main/resources/img/relacioni.png)
+![Relacioni model](src/main/resources/img/relacioni.png)
 
 
 
